@@ -1,0 +1,36 @@
+name: qaq-checkin
+
+on:
+  schedule:
+    - cron: "10 0 * * *"
+  workflow_dispatch:
+
+jobs:
+  checkin:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "pnpm"
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.12.3
+
+      - name: Install deps
+        run: pnpm install --frozen-lockfile
+
+      - name: Run check-in
+        run: pnpm run checkin
+        env:
+          BASE_URL: "https://sign.qaq.al"
+          TIER: "4"
+          MODE: "full"
+          MIN_SUBMIT_DELAY_MS: "60000"
+          COOKIE: ${{ secrets.QAQ_COOKIE }}

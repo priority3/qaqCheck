@@ -1,0 +1,14 @@
+{
+  "name": "qaq-checkin",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "checkin": "tsx src/checkin.ts"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "tsx": "^4.7.1",
+    "typescript": "^5.5.4"
+  },
+  "packageManager": "pnpm@9.12.3"
+}
