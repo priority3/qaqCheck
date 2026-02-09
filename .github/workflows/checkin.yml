@@ -34,3 +34,4 @@ jobs:
           MODE: "full"
           MIN_SUBMIT_DELAY_MS: "60000"
           COOKIE: ${{ secrets.COOKIE }}
+          PUSHPLUS_TOKEN: ${{ secrets.PUSHPLUS_TOKEN }}

@@ -9,6 +9,7 @@
 - 根据服务端下发的难度挑战，暴力求解满足条件的 nonce
 - 提交求解结果完成签到
 - 支持 `challenge-only` 和 `full` 两种运行模式
+- 签到结果通过 [PushPlus](https://www.pushplus.plus/) 推送通知（可选）
 - 通过 GitHub Actions 定时自动执行（每日 UTC 00:10）
 
 ## 使用
@@ -28,7 +29,8 @@ pnpm run checkin
 
 | Secret | 说明 | 示例 |
 |---|---|---|
-| `QAQ_COOKIE` | 登录 Cookie（包含 sid 和 cf_clearance） | `sid=xxx; cf_clearance=xxx` |
+| `COOKIE` | 登录 Cookie（包含 sid 和 cf_clearance） | `sid=xxx; cf_clearance=xxx` |
+| `PUSHPLUS_TOKEN` | PushPlus 推送 Token（可选） | 在 [pushplus.plus](https://www.pushplus.plus/) 获取 |
 
 ## 环境变量
 
@@ -44,6 +46,7 @@ pnpm run checkin
 | `MAX_POW_SECONDS` | PoW 求解超时时间（s） | `300` |
 | `MIN_SUBMIT_DELAY_MS` | 提交最小延迟（ms） | `60000` |
 | `HPS` | 手动指定哈希速率，跳过基准测试 | - |
+| `PUSHPLUS_TOKEN` | PushPlus 推送 Token | - |
 
 ## 技术栈
 

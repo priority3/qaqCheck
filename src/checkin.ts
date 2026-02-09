@@ -9,6 +9,7 @@ const BENCH_ROUNDS = Number(process.env.BENCH_ROUNDS ?? "3");
 const BENCH_DURATION_MS = Number(process.env.BENCH_DURATION_MS ?? "1200");
 const MAX_POW_SECONDS = Number(process.env.MAX_POW_SECONDS ?? "300");
 const MIN_SUBMIT_DELAY_MS = Number(process.env.MIN_SUBMIT_DELAY_MS ?? "60000");
+const PUSHPLUS_TOKEN = process.env.PUSHPLUS_TOKEN;
 
 const baseHeaders: Record<string, string> = {
   "sec-ch-ua-platform": '"macOS"',
@@ -32,6 +33,25 @@ type FetchResult<T> = {
 };
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+async function pushplus(title: string, content: string): Promise<void> {
+  if (!PUSHPLUS_TOKEN) return;
+  try {
+    const res = await fetch("http://www.pushplus.plus/send", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ token: PUSHPLUS_TOKEN, title, content, template: "html" })
+    });
+    const data = await res.json() as { code?: number; msg?: string };
+    if (data.code === 200) {
+      console.log("[pushplus] notification sent");
+    } else {
+      console.warn(`[pushplus] failed: ${data.msg}`);
+    }
+  } catch (e) {
+    console.warn(`[pushplus] error: ${e instanceof Error ? e.message : e}`);
+  }
+}
 
 async function fetchJson<T>(
   path: string,
@@ -211,6 +231,7 @@ async function main() {
 
   if (me.data?.signedInToday && !me.data?.isTest) {
     console.log("[info] already signed in today; exiting.");
+    await pushplus("qaq 签到提醒", "今日已签到，无需重复操作。");
     return;
   }
 
@@ -267,13 +288,29 @@ async function main() {
   );
 
   if (!submitRes.ok) {
-    throw new Error(`submit failed: ${submitRes.status} ${submitRes.text}`);
+    const msg = `submit failed: ${submitRes.status} ${submitRes.text}`;
+    await pushplus("qaq 签到失败", msg);
+    throw new Error(msg);
   }
 
+  const reward = (submitRes.data as { rewardFinal?: number })?.rewardFinal;
+  const notes = (submitRes.data as { notes?: string })?.notes;
+  const successMsg = [
+    "<b>签到成功</b>",
+    reward != null ? `奖励: ${reward}` : "",
+    notes ? `备注: ${notes}` : "",
+    `难度: ${difficulty}`,
+    `Nonce: ${result.nonce}`,
+    `HPS: ${hps.toLocaleString()} H/s`
+  ].filter(Boolean).join("<br>");
+
+  await pushplus("qaq 签到成功", successMsg);
   console.log("[info] submit ok", submitRes.data ?? submitRes.text);
 }
 
-main().catch((error) => {
-  console.error(`[error] ${error instanceof Error ? error.message : error}`);
+main().catch(async (error) => {
+  const msg = error instanceof Error ? error.message : String(error);
+  console.error(`[error] ${msg}`);
+  await pushplus("qaq 签到异常", msg);
   process.exit(1);
 });
