@@ -231,7 +231,7 @@ async function main() {
 
   if (me.data?.signedInToday && !me.data?.isTest) {
     console.log("[info] already signed in today; exiting.");
-    await pushplus("qaq 签到提醒", "今日已签到，无需重复操作。");
+    await pushplus("qaq 签到 - 今日已签到", "无需重复操作。");
     return;
   }
 
@@ -289,14 +289,13 @@ async function main() {
 
   if (!submitRes.ok) {
     const msg = `submit failed: ${submitRes.status} ${submitRes.text}`;
-    await pushplus("qaq 签到失败", msg);
+    await pushplus("qaq 签到 - 提交失败", msg);
     throw new Error(msg);
   }
 
   const reward = (submitRes.data as { rewardFinal?: number })?.rewardFinal;
   const notes = (submitRes.data as { notes?: string })?.notes;
   const successMsg = [
-    "<b>签到成功</b>",
     reward != null ? `奖励: ${reward}` : "",
     notes ? `备注: ${notes}` : "",
     `难度: ${difficulty}`,
@@ -304,13 +303,13 @@ async function main() {
     `HPS: ${hps.toLocaleString()} H/s`
   ].filter(Boolean).join("<br>");
 
-  await pushplus("qaq 签到成功", successMsg);
+  await pushplus("qaq 签到 - 成功", successMsg);
   console.log("[info] submit ok", submitRes.data ?? submitRes.text);
 }
 
 main().catch(async (error) => {
   const msg = error instanceof Error ? error.message : String(error);
   console.error(`[error] ${msg}`);
-  await pushplus("qaq 签到异常", msg);
+  await pushplus("qaq 签到 - 异常", msg);
   process.exit(1);
 });
