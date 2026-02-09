@@ -1,6 +1,6 @@
 # qaq-checkin
 
-自动化签到工具，通过 WASM PoW（工作量证明）求解完成 [qaq.al](https://sign.qaq.al) 每日签到任务。
+[GGBOOM 公益站](https://sign.qaq.al) 自动签到脚本，通过 WASM PoW（工作量证明）求解完成每日签到任务。
 
 ## 功能
 
