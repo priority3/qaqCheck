@@ -36,17 +36,17 @@ pnpm run checkin
 
 | 变量 | 说明 | 默认值 |
 |---|---|---|
+| `COOKIE` | **[必填]** 登录凭证（包含 sid 和 cf_clearance） | - |
 | `BASE_URL` | 签到服务地址 | `https://sign.qaq.al` |
 | `POW_WASM_URL` | WASM 文件地址 | `${BASE_URL}/wasm/pow.wasm` |
 | `TIER` | 签到等级 | `4` |
 | `MODE` | 运行模式（`full` / `challenge-only`） | `challenge-only` |
-| `COOKIE` | 登录凭证 | - |
 | `BENCH_ROUNDS` | 基准测试轮数 | `3` |
 | `BENCH_DURATION_MS` | 单轮基准测试时长（ms） | `1200` |
 | `MAX_POW_SECONDS` | PoW 求解超时时间（s） | `300` |
 | `MIN_SUBMIT_DELAY_MS` | 提交最小延迟（ms） | `60000` |
-| `HPS` | 手动指定哈希速率，跳过基准测试 | - |
-| `PUSHPLUS_TOKEN` | PushPlus 推送 Token | - |
+| `HPS` | **[可选]** 手动指定哈希速率，跳过基准测试 | - |
+| `PUSHPLUS_TOKEN` | **[可选]** PushPlus 推送 Token | - |
 
 ## 技术栈
 
